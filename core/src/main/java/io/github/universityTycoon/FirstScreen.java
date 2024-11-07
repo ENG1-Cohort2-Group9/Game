@@ -13,14 +13,13 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 
 public class FirstScreen implements Screen {
-    SpriteBatch batch;
 
-    FitViewport viewport;
+    GameModel gameModel;
+    SpriteBatch batch;
 
     Vector2 touchPos;
     Array<Sprite> dropSprites;
 
-    BitmapFont font;
 
 
     // Everything that goes in create for an application listener, goes in here
@@ -28,6 +27,7 @@ public class FirstScreen implements Screen {
     final ScreenManager game;
     public FirstScreen(ScreenManager main) {
         this.game = main;
+        gameModel = new GameModel();
 
     }
 
@@ -36,7 +36,6 @@ public class FirstScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
-        viewport = new FitViewport(16, 9);
 
         // start the playback of the background music
         // when the screen is shown
@@ -53,7 +52,7 @@ public class FirstScreen implements Screen {
     @Override
     public void resize(int width, int height) {
 
-        viewport.update(width, height, true);
+        GameModel.viewport.update(width, height, true);
     }
 
 
@@ -62,15 +61,14 @@ public class FirstScreen implements Screen {
 
         if (Gdx.input.isTouched()) {
             touchPos.set(Gdx.input.getX(), Gdx.input.getY());
-            viewport.unproject(touchPos);
+            GameModel.viewport.unproject(touchPos);
             // ABuilding.setCenterX(touchPos.x); use this to place a building with the mouse
         }
 
     }
 
     private void logic() {
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
+
 
         float delta = Gdx.graphics.getDeltaTime();
 
@@ -79,14 +77,11 @@ public class FirstScreen implements Screen {
 
     private void draw() {
         ScreenUtils.clear(Color.BLACK);
-        viewport.apply();
-        batch.setProjectionMatrix(viewport.getCamera().combined);
+        GameModel.viewport.apply();
+        batch.setProjectionMatrix(GameModel.viewport.getCamera().combined);
         batch.begin();
 
-        float worldWidth = viewport.getWorldWidth();
-        float worldHeight = viewport.getWorldHeight();
-
-        game.font.draw(batch, "Sentence goes here", 1, 1.5f);
+        gameModel.font.draw(batch, "Sentence goes here", 1, 1.5f);
 
         batch.end();
     }
